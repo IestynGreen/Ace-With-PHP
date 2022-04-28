@@ -5,6 +5,9 @@
     $QuestionNum = 1;
     $AnswerNum = 0;
     $Score = 0;
+
+    //On page 2
+    //$LastBig = $_COOKIE['QuizChoice'];
     ?>
 
 <html lang="en" dir="ltr">
@@ -13,6 +16,9 @@
     <title>TAKE QUIZ</title>
 </head>
 <body>
+<form action="quiztest.php" method="POST">
+<p>Enter student code</p>
+<input type="number" name="StudentCode" required>
 
 <?php
     $query = "SELECT * FROM quizqa ORDER BY QuestionID ASC ";
@@ -24,15 +30,12 @@
     if(mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_array($result)) {
 
-
             $ans = array($row['Answer1'], $row['Answer2'], $row['Answer3'], $row['Answer4']);
             shuffle($ans);
             $name = 'Button+'.strval($QuestionNum);
             $val = 'test+'.strval($AnswerNum);
-
             ?>
 
-            <form action="quiztest.php" method="POST">
 
             <?php echo '<p>Question '.$QuestionNum.'</p>';
             echo $row["Question"]; ?>
@@ -59,11 +62,14 @@
             $CorrectArray[$QuestionNum] = $row['Answer1'];
             $QuestionNum += 1;
         }
-
     }
 
 
 echo '<button type="submit" name="butt" value="Submit"> Finish Quiz </button>';
+
+
+
+
 echo'</form>';
     if (isset($_POST["butt"])) {
         for ($i = 1; $i < $QuestionNum; $i++) {
@@ -72,8 +78,36 @@ echo'</form>';
                     $Score += 1;
                 }
         }
-        echo '<script>alert(' . $Score . ')</script>';
-    }
+        $StudentCode = $_POST['StudentCode'];
+
+
+
+            $result = ($Score / $QuestionNum) * 100;
+
+            $resultset = mysqli_query($con, "SELECT * FROM studenttable WHERE StudentID='" . $StudentCode . "'");
+            $count = mysqli_num_rows($resultset);
+
+
+            if ($count == 0) {
+
+                $query = "insert into studenttable(StudentID, Score) values('$StudentCode','$result')";
+                $run = mysqli_query($con, $query) or die(mysqli_error());
+
+                    echo '<script>alert(' . $result . ')</script>';
+                    echo'<script>window.location = "home.html"</script>';
+            } else {
+                echo '<script>alert("You can only sit this test once!")</script>';
+                echo'<script>window.location = "home.html"</script>';
+            }
+
+            //check if StudentID has already been entered, tell them they can only do the test once
+            //Make the quiz pop up in a html page
+            //fix the create quiz page
+
+        }
+
+
+
 
     ?>
 

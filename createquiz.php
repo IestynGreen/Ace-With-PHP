@@ -7,29 +7,29 @@ $sql = mysqli_query($con,"SELECT MAX(QuizID) FROM quizqa");
 $row = mysqli_fetch_array($sql);
 $maxID = $row[0];
 
+$Webdev = false;
+$Psychology = false;
+$Maths = false;
+$Banking = false;
+
     if(isset($_POST['enter'])){
 
         if(!empty($_POST['Question']) && !empty($_POST['Answer1']) && !empty($_POST['Answer2']) && !empty($_POST['Answer3']) && !empty($_POST['Answer4'])){
-
-
-
             echo '<script>alert("")</script>';
-
-
             $Question = $_POST['Question'];
             $Answer1 = $_POST['Answer1'];
             $Answer2 = $_POST['Answer2'];
             $Answer3 = $_POST['Answer3'];
             $Answer4 = $_POST['Answer4'];
 
-            $query = "insert into quizqa(QuizID, Question, Answer1, Answer2, Answer3, Answer4) values('$maxID', '$Question' , '$Answer1', '$Answer2', '$Answer3', '$Answer4')";
+            $QuizName = $_POST['QuizName'];
+            $Courses = $_POST['Courses'];
 
+            $query = "insert into quizqa(QuizID, Question, Answer1, Answer2, Answer3, Answer4, QuizName, Courses) values('$maxID', '$Question' , '$Answer1', '$Answer2', '$Answer3', '$Answer4', '$QuizName', '$Courses')";
             $run = mysqli_query($con, $query) or die(mysqli_error());
-
             if($run){
                 echo "Form submitted successfully";
             }
-
             else{
                 echo "Form not submitted";
             }
@@ -37,18 +37,12 @@ $maxID = $row[0];
         else{
             echo " all fields required";
         }
-
-
 }
 
 if(isset($_POST['finish'])) {
     echo '<script>alert("quiz saved")</script>';
 
-
 if(!empty($_POST['Question']) && !empty($_POST['Answer1']) && !empty($_POST['Answer2']) && !empty($_POST['Answer3']) && !empty($_POST['Answer4'])){
-
-
-
     echo '<script>alert("")</script>';
 
     $sql = mysqli_query($con,"SELECT MAX(QuizID) FROM quizqa");
@@ -61,12 +55,13 @@ if(!empty($_POST['Question']) && !empty($_POST['Answer1']) && !empty($_POST['Ans
     $Answer3 = $_POST['Answer3'];
     $Answer4 = $_POST['Answer4'];
 
-    $query = "insert into quizqa(QuizID, Question, Answer1, Answer2, Answer3, Answer4) values('$nextID', '$Question' , '$Answer1', '$Answer2', '$Answer3', '$Answer4')";
+    $QuizName = $_POST['QuizName'];
+    $Courses = $_POST['Courses'];
+
+    $query = "insert into quizqa(QuizID, Question, Answer1, Answer2, Answer3, Answer4, QuizName, Course) values('$nextID', '$Question' , '$Answer1', '$Answer2', '$Answer3', '$Answer4', '$QuizName', '$Courses')";
     $run = mysqli_query($con, $query) or die(mysqli_error());}
         }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -75,10 +70,18 @@ if(!empty($_POST['Question']) && !empty($_POST['Answer1']) && !empty($_POST['Ans
         <title>CREATE QUIZ</title>
     </head>
     <body>
-
-
-
         <form action = "createquiz.php" method="post">
+            <p>Enter Quiz Name below</p>
+            <input type="text" name="QuizName">
+
+            <p>Select the courses</p>
+            <select name="Courses" id="Courses">
+                <option value="WebDev">WebDev</option>
+                <option value="Psychology">Psychology</option>
+                <option value="Banking">Banking</option>
+                <option value="Maths">Maths</option>
+            </select>
+
             <p>Enter question below</p>
             <input type="text" name="Question">
             <p>Enter correct answer below</p>
@@ -91,7 +94,7 @@ if(!empty($_POST['Question']) && !empty($_POST['Answer1']) && !empty($_POST['Ans
                 <input type="text" name="Answer4">
             <br>
             <br>
-                </a><button type="submit" name="enter"> Add Question to Quiz </button>
+                <button type="submit" name="enter"> Add Question to Quiz </button>
                 <button type="submit" name="finish"> Begin New Quiz (This is the first question) </button>
         </form>
     </body>
