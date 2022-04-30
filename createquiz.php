@@ -12,6 +12,7 @@ $Psychology = false;
 $Maths = false;
 $Banking = false;
 
+
     if(isset($_POST['enter'])){
 
         if(!empty($_POST['Question']) && !empty($_POST['Answer1']) && !empty($_POST['Answer2']) && !empty($_POST['Answer3']) && !empty($_POST['Answer4'])){
@@ -25,7 +26,7 @@ $Banking = false;
             $QuizName = $_POST['QuizName'];
             $Courses = $_POST['Courses'];
 
-            $query = "insert into quizqa(QuizID, Question, Answer1, Answer2, Answer3, Answer4, QuizName, Courses) values('$maxID', '$Question' , '$Answer1', '$Answer2', '$Answer3', '$Answer4', '$QuizName', '$Courses')";
+            $query = "insert into quizqa(QuizID, Question, Answer1, Answer2, Answer3, Answer4, QuizName, Course) values('$maxID', '$Question' , '$Answer1', '$Answer2', '$Answer3', '$Answer4', '$QuizName', '$Courses')";
             $run = mysqli_query($con, $query) or die(mysqli_error());
             if($run){
                 echo "Form submitted successfully";
@@ -60,7 +61,15 @@ if(!empty($_POST['Question']) && !empty($_POST['Answer1']) && !empty($_POST['Ans
 
     $query = "insert into quizqa(QuizID, Question, Answer1, Answer2, Answer3, Answer4, QuizName, Course) values('$nextID', '$Question' , '$Answer1', '$Answer2', '$Answer3', '$Answer4', '$QuizName', '$Courses')";
     $run = mysqli_query($con, $query) or die(mysqli_error());}
+
+
+
         }
+
+$query = "SELECT * FROM quizqa ORDER BY QuestionID ASC ";
+$result = mysqli_query($con, $query);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -70,6 +79,15 @@ if(!empty($_POST['Question']) && !empty($_POST['Answer1']) && !empty($_POST['Ans
         <title>CREATE QUIZ</title>
     </head>
     <body>
+
+
+    //Want to use previous ID to make an if statement. If Quiz ID == Current ID{Do not display Enter quiz name and courses and display add questions} else if it doesnt then its a new quiz and will allow user to enter new quiz name and course
+
+
+
+    <?php
+
+    ?>
         <form action = "createquiz.php" method="post">
             <p>Enter Quiz Name below</p>
             <input type="text" name="QuizName">

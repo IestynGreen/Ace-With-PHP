@@ -5,6 +5,7 @@
     $QuestionNum = 1;
     $AnswerNum = 0;
     $Score = 0;
+    $QuizNum = $_GET['QuizNum'];
 
     //On page 2
     //$LastBig = $_COOKIE['QuizChoice'];
@@ -17,10 +18,10 @@
 </head>
 <body>
 <form action="quiztest.php" method="POST">
-<p>Enter student code</p>
-<input type="number" name="StudentCode" required>
+
 
 <?php
+
     $query = "SELECT * FROM quizqa ORDER BY QuestionID ASC ";
     $result = mysqli_query($con, $query);
 
@@ -30,37 +31,45 @@
     if(mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_array($result)) {
 
-            $ans = array($row['Answer1'], $row['Answer2'], $row['Answer3'], $row['Answer4']);
-            shuffle($ans);
-            $name = 'Button+'.strval($QuestionNum);
-            $val = 'test+'.strval($AnswerNum);
-            ?>
+            if($row['QuizID'] == $QuizNum){
 
-
-            <?php echo '<p>Question '.$QuestionNum.'</p>';
-            echo $row["Question"]; ?>
-            <br>
-            <p>Select the correct answer below </p>
-            <?php foreach ($ans as $choice) { ?>
-                    <input type=radio name=<?php echo $name ?> value=<?php echo $choice?>>
-                <label for=<?php echo $name ?>> <?php echo $choice ?><br></label>
-                <?php
-
-                $AnswerNum += 1;
+                $ans = array($row['Answer1'], $row['Answer2'], $row['Answer3'], $row['Answer4']);
+                shuffle($ans);
+                $name = 'Button+'.strval($QuestionNum);
                 $val = 'test+'.strval($AnswerNum);
-            }
 
-            if (isset($_POST[$name])) {
-                // Show the radio button value, i.e. which one was checked when the form was sent
-                $x = $_POST[$name];
-                $ChoiceArray[$QuestionNum] = $x;
-                array_push($ChoiceArray, $x);
+                ?>
+
+                <h1><?php echo $row["QuizName"] ?></h1>
+
+                <p>Enter student code</p>
+                <input type="number" name="StudentCode" required>
+
+                <?php echo '<p>Question '.$QuestionNum.'</p>';
+                echo $row["Question"]; ?>
+                <br>
+                <p>Select the correct answer below </p>
+                <?php foreach ($ans as $choice) { ?>
+                        <input type=radio name=<?php echo $name ?> value=<?php echo $choice?>>
+                    <label for=<?php echo $name ?>> <?php echo $choice ?><br></label>
+                    <?php
+
+                    $AnswerNum += 1;
+                    $val = 'test+'.strval($AnswerNum);
+                }
+
+                if (isset($_POST[$name])) {
+                    // Show the radio button value, i.e. which one was checked when the form was sent
+                    $x = $_POST[$name];
+                    $ChoiceArray[$QuestionNum] = $x;
+                    array_push($ChoiceArray, $x);
+                }
+                else{
+                    $ChoiceArray[$QuestionNum] = "";
+                }
+                $CorrectArray[$QuestionNum] = $row['Answer1'];
+                $QuestionNum += 1;
             }
-            else{
-                $ChoiceArray[$QuestionNum] = "";
-            }
-            $CorrectArray[$QuestionNum] = $row['Answer1'];
-            $QuestionNum += 1;
         }
     }
 
