@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $database_name = "quiz";
+    $database_name = "test";
     $con = mysqli_connect("localhost", "root", "", $database_name);
     $QuestionNum = 1;
     $AnswerNum = 0;

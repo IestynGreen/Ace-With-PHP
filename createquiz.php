@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $database_name = "quiz";
+    $database_name = "test";
     $con = mysqli_connect("localhost", "root", "", $database_name);
 
 $sql = mysqli_query($con,"SELECT MAX(QuizID) FROM quizqa");
