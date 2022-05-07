@@ -6,7 +6,7 @@
     $AnswerNum = 0;
     $Score = 0;
 
-   // $QuizNum = $_GET['QuizNum'];
+    $QuizNum = $_GET['QuizNum'];
 
     ?>
 <html lang="en" dir="ltr">
@@ -38,21 +38,22 @@
     $ham = array($row3["QuizID"]);
     $ham2 = array($row3["Quizname"]);
     for($p = 0; $p < count($ham); $p++) {
-   //     if($ham[$p] == $QuizNum){
-     //       echo '<h1>'.$ham2[$p].'</h1>' ;
-      //  }
+        if($ham[$p] == $QuizNum){
+            echo '<h1>'.$ham2[$p].'</h1>' ;
+        }
     }
 
-    ?>
 
-   <form action="quiztest.php" method="post">
+
+   echo '<form action="quiztest.php?QuizNum='.$QuizNum.'" method="post">';
+   ?>
         <p>Enter student code</p>
-        <input type="text" name="StudentID">
+        <input type="number" name="StudentID">
     <?php
     if(mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_array($result)) {
 
-         //   if($row['QuizID'] == $QuizID[0]) {
+            if($row['QuizID'] == $QuizNum) {
 
                 $ans = array($row['Answer1'], $row['Answer2'], $row['Answer3'], $row['Answer4']);
 
@@ -84,7 +85,7 @@
 
                             // Show the radio button value, i.e. which one was checked when the form was sent
                     $x = $_POST[$name];
-                    echo $x;
+                   // echo $x;
                     $ChoiceArray[$QuestionNum] = $x;
                     //array_push($ChoiceArray, $x);
                 }
@@ -97,7 +98,7 @@
                 $QuestionNum += 1;
 
             }
-      // }
+       }
     }
 
     echo '<button type="submit" name="butt" value="Submit"> Finish Quiz </button>';
@@ -105,25 +106,22 @@
 
         if(isset($_POST["butt"])) {
             for ($i = 1; $i < $QuestionNum; $i++) {
-
                 if ($ChoiceArray[$i] == $CorrectArray[$i]) {
                     $Score += 1;
-
                 }
             }
-
-
+            echo '<script>alert(' . $Score . ')</script>';
                 $StudentID = $_POST["StudentID"];
 
-                $results = ($Score / $QuestionNum) * 100;
+                $results = ($Score / ($QuestionNum-1)) * 100;
 
-                $resultset = mysqli_query($con, "SELECT * FROM studenttable WHERE StudentID='$StudentID'");
+                $resultset = mysqli_query($con, "SELECT * FROM studenttable WHERE StudentID='$StudentID' AND QuizID='$QuizNum'");
                 $count = mysqli_num_rows($resultset);
 
 
                 if ($count == 0) {
 
-                    $query3 = "insert into studenttable(StudentID, Score) values('$StudentID','$results')";
+                    $query3 = "insert into studenttable(QuizID, StudentID, Score) values('$QuizNum','$StudentID','$results')";
                     $run = mysqli_query($con, $query3) or die(mysqli_error());
                     echo '<script>alert(' . $results . ')</script>';
 
