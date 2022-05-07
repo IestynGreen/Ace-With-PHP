@@ -60,7 +60,7 @@
 }
 
 a:-webkit-any-link {
-    color: white;
+    /*-->color: white;*/
     cursor: pointer;
     text-decoration: underline;
 }

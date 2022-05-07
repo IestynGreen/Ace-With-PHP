@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $database_name = "test";
+    $database_name = "quiz";
     $con = mysqli_connect("localhost", "root", "", $database_name);
 
 ?>
@@ -16,7 +16,7 @@
 
 
     <?php
-    $query = "SELECT * FROM quizqa ORDER BY Course  ASC  ";
+    $query = "SELECT * FROM quizlist ORDER BY Course ASC  ";
     $result = mysqli_query($con, $query);
     $LastBig = 0;
     $b = 0;
@@ -27,7 +27,7 @@
     if(mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_array($result)) {
             $ans = array($row['QuizID']);
-            $name = array($row['QuizName']);
+            $name = array($row['Quizname']);
             $Course = array($row['Course']);
             ?>
 
